@@ -1,5 +1,16 @@
 from django import forms
-from find_it.models import Product
+from find_it.models import Product, Store
+from find_it.mixins import UserIsOverMixin
+
+class StoreForm(forms.ModelForm):
+    class Meta:
+        model = Store
+        fields = ["name", "description", "phone", "website"]
+
+    def __init__(self, *args, **kwargs):
+        super(StoreForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({"class": "form-control"})
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -7,7 +18,12 @@ class ProductForm(forms.ModelForm):
         fields = ["store", "name", "category", "price", "fabricator"]
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super(ProductForm, self).__init__(*args, **kwargs)
+
+        if UserIsOverMixin():
+            print("Nice work bro")
+
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
 

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>List of products</h2>
+    <form method="get" class="form-inline mb-3">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        <button type="submit" class="btn btn-primary ml-2">Фільтрувати</button>
+    </form>
+
+    <ul class="list-group">
+        {% for product in products %}
+
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{% url 'find_it:product-detail' product.pk %}">{{ product.name }}</a>
+                <span class="badge badge-primary">{{ product.category }}</span>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No products were find</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

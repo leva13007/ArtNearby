@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Manage My Stores</h2>
+
+    <!-- Form to add a new store -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Add New Store</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ form.website.id_for_label }}" class="form-label">Website</label>
+                        {{ form.website }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Store</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- List of existing stores -->
+    <div class="card">
+        <div class="card-header">
+            <h5>My Stores</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Website</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for store in stores %}
+                    <tr>
+                        <td>{{ store.name }}</td>
+                        <td>{{ store.phone }}</td>
+                        <td><a href="{{ store.website }}" target="_blank">{{ store.website }}</a></td>
+                        <td>{{ store.description }}</td>
+                        <td>
+                            <!-- Edit button (opens a modal or redirects to edit page) -->
+                            <button class="btn btn-sm btn-warning edit-btn"
+                                    data-store-id="{{ store.id }}"
+                                    data-store-name="{{ store.name }}"
+                                    data-store-phone="{{ store.phone }}"
+                                    data-store-website="{{ store.website }}"
+                                    data-store-description="{{ store.description }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editStoreModal">
+                                Edit
+                            </button>
+                            <!-- Delete button -->
+                            <form method="post" action="{% url 'find_it:store-delete' store.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing a store -->
+<div class="modal fade" id="editStoreModal" tabindex="-1" aria-labelledby="editStoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStoreModalLabel">Edit Store</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="editStoreForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="store_id" id="editStoreId">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone</label>
+                        <input type="number" class="form-control" id="editPhone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editWebsite" class="form-label">Website</label>
+                        <input type="url" class="form-control" id="editWebsite" name="website" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editDescription" name="description" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle edit modal -->
+<script>
+    // Populate the edit modal with store data
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const storeId = this.getAttribute('data-store-id');
+            const storeName = this.getAttribute('data-store-name');
+            const storePhone = this.getAttribute('data-store-phone');
+            const storeWebsite = this.getAttribute('data-store-website');
+            const storeDescription = this.getAttribute('data-store-description');
+
+            document.getElementById('editStoreId').value = storeId;
+            document.getElementById('editName').value = storeName;
+            document.getElementById('editPhone').value = storePhone;
+            document.getElementById('editWebsite').value = storeWebsite;
+            document.getElementById('editDescription').value = storeDescription;
+
+            // Update the form action to point to the update URL
+            document.getElementById('editStoreForm').action = `/stores/${storeId}/update/`;
+        });
+    });
+</script>
+{% endblock %}
