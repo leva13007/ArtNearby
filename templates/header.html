@@ -1,20 +1,26 @@
-<div class="p-3">
-    <div class="d-flex flex-row">
-        <h1 class="m-0">Find your Product</h1>  
-    </div>
+{% load avatar_tags %}
+{% user_avatar user size=50 as avatar_svg %}
+
+
+<header class="bg-custom-dark-blue text-white py-3 border-bottom">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div>
+            <a href="{% url 'index' %}" class="h2 mb-0 text-custom-light-purple text-decoration-none">Find your Product</a>
+        </div>
         
-    <div class="position-absolute top-0 end-0 mr-2 mt-4">
-        {% if request.user.is_authenticated %}
-            <span class="p-3">Hi, <a href="{% url 'profile' %}"> {{user.username}}</a></span>
-            <img src="https://placehold.co/50"
-                class="rounded-circle"
-                width="50"
-                height="50">
+        <div class="d-flex align-items-center gap-3">
+            {% if request.user.is_authenticated %}
+                <span class="h4 text-custom-light-purple">Hi, <a href="{% url 'profile' %}" class="text-decoration-none mb-0 text-custom-light-purple"> {{user.username}}</a></span>
+                <img src="data:image/svg+xml;utf8,"
+                    alt="Profile Picture"
+                    class="rounded-circle"
+                    width="50"
+                    height="50">
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-light">Logout</a>
 
-        {% else %}
-            <span class="m-4">Hi, <a href="{% url 'register' %}">non authenticated user</a></span>
-        {% endif %}
+            {% else %}
+                <span class="h4 btn btn-sm btn-outline-light textcustom-light-purple">Hi, <a href="{% url 'register' %}">non authenticated user</a></span>
+            {% endif %}
+        </div>
     </div>
-
-</div>
-<hr>
+</header>

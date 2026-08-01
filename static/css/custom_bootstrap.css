@@ -1,0 +1,24 @@
+/* static/css/custom_bootstrap.css */
+:root {
+  --custom-green: #7cad79;    /* Example: Replace with your green */
+  --custom-teal: #478593;     /* Example: Replace with your teal */
+  --custom-dark-blue: #385575; /* Example: Replace with your dark blue */
+  --custom-purple: #5f6496;   /* Example: Replace with your purple */
+  --custom-light-purple: #E6E6FA; /* Example: Replace with your light purple */
+}
+
+/* Override Bootstrap's primary color */
+.bg-custom-green { background-color: var(--custom-green) !important; }
+.text-custom-green { color: var(--custom-green) !important; }
+
+.bg-custom-teal { background-color: var(--custom-teal) !important; }
+.text-custom-teal { color: var(--custom-teal) !important; }
+
+.bg-custom-dark-blue { background-color: var(--custom-dark-blue) !important; }
+.text-custom-dark-blue { color: var(--custom-dark-blue) !important; }
+
+.bg-custom-purple { background-color: var(--custom-purple) !important; }
+.text-custom-purple { color: var(--custom-purple) !important; }
+
+.bg-custom-light-purple { background-color: var(--custom-light-purple) !important; }
+.text-custom-light-purple { color: var(--custom-light-purple) !important; }

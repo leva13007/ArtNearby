@@ -1,8 +1,8 @@
 from django.core.exceptions import PermissionDenied
 
-class UserIsOverMixin(object):
+class UserIsOverMixin:
     def dispatch(self, request, *args, **kwargs):
-        instance = self.get.object()
-        if instance.creator != self.request.user:
+        instance = self.get_object()
+        if instance.creator != request.user:
             raise PermissionDenied
-        return super().dispatch(*args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)

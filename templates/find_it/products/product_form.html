@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-3">
-    <h2>{{ view.title }}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Save product</button>
-    </form>
-</div>
+    {% if user.is_authenticated and user.profile.user_type == 'company' %}
+        <div class="container mt-3">
+            <h2>{{ view.title }}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Save product</button>
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}

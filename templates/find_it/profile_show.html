@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>SOME RANDOM THING TO LOOK AT</p>
-    <p>Hello, {{user.username}} !!</p>
+  <div class="container card opacity-50 p-5">
+    <p class="opacity-100">SOME RANDOM THING TO LOOK AT</p>
+    <p class="opacity-100">Hello, {{user.username}} !!</p>
+  </div>
 {% endblock %}
-
 
 <div id="map"></div>
 <script type="module" src="static/js/main.js"></script>  

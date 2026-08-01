@@ -9,13 +9,14 @@
         <button type="submit" class="btn btn-primary ml-2">Фільтрувати</button>
     </form>
 
-    <ul class="list-group">
+    <ul>
         {% for product in products %}
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <a href="{% url 'find_it:product-detail' product.pk %}">{{ product.name }}</a>
-                <span class="badge badge-primary">{{ product.category }}</span>
+        <li class="list-group-item d-flex justify-content-between row row-cols-2 row-cols-lg-5 g-2 g-lg-3 m-3">
+            <div class="card opacity-70">
+                <div class="card-body opacity-100">
+                    <a href="{% url 'find_it:product-detail' product.pk %}" class="text-decoration-none mb-0 text-custom-custom-dark-blue">{{ product.name }}</a>
+                    <span class="badge badge-primary text-custom-dark-blue">{{ product.category }}</span>
+                </div>
             </div>
         </li>
         {% empty %}

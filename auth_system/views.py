@@ -5,6 +5,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomRegistrationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
+from find_it.templatetags.utils import generate_avatar_svg
+from .models import Profile
 
 # Create your views here.
 def register(request):
@@ -21,15 +23,19 @@ def register(request):
             login(request, user)
             messages.success(request, "Реєстрація успішна!")
 
-            # Handle additional fields based on user type
-            if user_type == 'company':
-                company_name = form.cleaned_data.get('company_name')
-                address = form.cleaned_data.get('address')
-                phone = form.cleaned_data.get('phone')
-                tax_id = form.cleaned_data.get('tax_id')
+            # Create the profile and store user type + company data
+            profile = Profile.objects.create(
+                user=user,
+                user_type=user_type,
+            )
 
-                # Save company-specific data (you might want to create a CompanyProfile model)
-                # Example: CompanyProfile.objects.create(user=user, company_name=company_name, ...)
+            # Save company-specific data if user is a company
+            if user_type == 'company':
+                profile.company_name = form.cleaned_data.get('company_name')
+                profile.address = form.cleaned_data.get('address')
+                profile.phone = form.cleaned_data.get('phone')
+                profile.tax_id = form.cleaned_data.get('tax_id')
+                profile.save()
 
             return redirect("index")
         else:

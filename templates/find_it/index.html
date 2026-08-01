@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="p-3">
-        <div>
-            <h2>Looking for something specific?</h2>
-            <input class="m-2" type="search" placeholder="Search..">
-        </div>
-        <div>
-            <h2>Popular products</h2>
+    <div class="p-4 container">
+        <div class="mt-4">
+            <h4 class="text-custom-light-purple">Some products that might be interesting</h2>
             <ul>
-            {% for product in find_it %}
-                <li></li>
+            {% for product in products %}
+                <li class="list-group-item d-flex justify-content-between row row-cols-2 row-cols-lg-5 g-2 g-lg-3 p-3">
+                    <div class="card opacity-50">
+                        <div class="card-body opacity-100">
+                            <a href="{% url 'find_it:product-detail' product.pk %}" class="text-decoration-none mb-0 text-custom-custom-dark-blue">{{ product.name }}</a>
+                            <span class="badge badge-primary text-custom-dark-blue">{{ product.category }}</span>
+                        </div>
+                    </div>
+                </li>
             {% endfor %}
             </ul>
+        </div>
+        <div>
+            <span class="h4 text-custom-light-purple">Want to see more?<a href="{% url 'find_it:list-product' %}" class="text-decoration-none text-custom-dark-blue"> Click here!</a></span>
         </div>
 
     </div>

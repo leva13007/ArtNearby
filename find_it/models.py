@@ -37,7 +37,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     price = models.FloatField()
-    fabricator = models.OneToOneField(Fabticator, on_delete=models.PROTECT)
+    fabricator = models.ManyToManyField(Fabticator)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_absolute_url(self):
