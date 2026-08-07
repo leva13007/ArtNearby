@@ -15,8 +15,12 @@ from find_it.decorators import company_required
 
 #Views
 def index(request):
-    products = Product.objects.all().order_by('?')[:6]  # Random 6 products
-    return render(request, template_name='find_it/index.html', context={'products': products})
+    showcase_products = Product.objects.all().order_by('?')[:3]  # 3 random products for cards
+    products = Product.objects.all().order_by('?')[:6]           # 6 random products for the list
+    return render(request, template_name='find_it/index.html', context={
+        'showcase_products': showcase_products,  # For the 3 cards
+        'products': products                      # For the "Some products that might be interesting" section
+    })
 
 def get_product_by_id(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -27,6 +31,7 @@ def get_product_by_id(request, product_id):
                     template_name="find_it/product_detail.html",
                     context=context
     )
+
 
 class ProductDetailView(DetailView):
     model = models.Product
@@ -52,19 +57,39 @@ class ProductListView(ListView):
         return context
 
 @method_decorator(company_required, name='dispatch')
-class ProductCreateView(LoginRequiredMixin, CreateView):
-    model = models.Product
-    template_name = "find_it/products/product_form.html"
+class ProductsManagementView(LoginRequiredMixin, View):
+    template_name = "find_it/products/products_management.html"
 
-    form_class = ProductForm
-    success_url = reverse_lazy("find_it:list-product")
+    def get(self, request):
+        products = Product.objects.filter(creator=request.user)
+        form = ProductForm()
+        return render(request, self.template_name, {'products': products, 'form': form})
 
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super().form_valid(form)
+    def post(self, request):
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.creator = request.user
+            product.save()
+            return redirect('find_it:products-management')
+        else:
+            products = Product.objects.filter(creator=request.user)
+            return render(request, self.template_name, {'products': products, 'form': form})
 
 @method_decorator(company_required, name='dispatch')
-class StoreManagementView(LoginRequiredMixin, UserIsOverMixin, View):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = models.Product
+    form_class = ProductForm
+    template_name = "find_it/products/product_update.html"
+    success_url = reverse_lazy("find_it:list-product")
+
+class ProductDeleteView(LoginRequiredMixin, UserIsOverMixin, DeleteView):
+    model = models.Product
+    template_name = "find_it/products/product_delete_confirmation.html"
+    success_url = reverse_lazy("find_it:product-management")
+
+@method_decorator(company_required, name='dispatch')
+class StoreManagementView(LoginRequiredMixin, View):
     template_name = "find_it/store/store_management.html"
 
     def get(self, request):
@@ -84,14 +109,14 @@ class StoreManagementView(LoginRequiredMixin, UserIsOverMixin, View):
             return render(request, self.template_name, {'stores': stores, 'form': form})
 
 @method_decorator(company_required, name='dispatch')       
-class StoreUpdateView(LoginRequiredMixin, UserIsOverMixin, UpdateView):
+class StoreUpdateView(LoginRequiredMixin, UpdateView):
     model = models.Store
     form_class = StoreForm
     template_name = "find_it/store/store_update_form.html"
     success_url = reverse_lazy("find_it:store-management")
 
 @method_decorator(company_required, name='dispatch')       
-class StoreDeleteView(LoginRequiredMixin, UserIsOverMixin, DeleteView):
+class StoreDeleteView(LoginRequiredMixin, DeleteView):
     model = models.Store
     success_url = reverse_lazy("find_it:store-management")
     template_name = "find_it/store/store_delete_confirmation.html"

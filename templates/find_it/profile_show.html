@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="container card opacity-50 p-5">
-    <p class="opacity-100">SOME RANDOM THING TO LOOK AT</p>
-    <p class="opacity-100">Hello, {{user.username}} !!</p>
+    {% if user.is_authenticated and user.profile.user_type == 'company' %}
+      <p class="h4 btn btn-sm btn-outline-light textcustom-light-purple"><a href="{% url 'find_it:products-management' %}">Manage your products</a></p>
+      <p class="h4 btn btn-sm btn-outline-light textcustom-light-purple"><a href="{% url 'find_it:store-management' %}">Manage your stores</a></p>
+    {%else%}
+      <p class="h4">Hi, {{ user.usermame }}! Welcome to your profile!</p>
+    {% endif %}
   </div>
-{% endblock %}
 
-<div id="map"></div>
-<script type="module" src="static/js/main.js"></script>  
+  <div id="map"></div>
+  <script type="module" src="static/js/main.js"></script>  
+{% endblock %}

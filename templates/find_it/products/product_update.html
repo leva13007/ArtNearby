@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated and user.profile.user_type == 'company' %}
+        <div class="container">
+            <h2>Update Product?</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{% url 'find_it:list-product' %}" class="btn btn-secondary">Return to list of products</a>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

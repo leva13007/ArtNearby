@@ -15,14 +15,11 @@ class StoreForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["store", "name", "category", "price", "fabricator"]
+        fields = ["store", "name", "category", "price", "fabricator", "description", "image"] 
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(ProductForm, self).__init__(*args, **kwargs)
-
-        if UserIsOverMixin():
-            print("Nice work bro")
 
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})

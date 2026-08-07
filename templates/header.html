@@ -5,21 +5,21 @@
 <header class="bg-custom-dark-blue text-white py-3 border-bottom">
     <div class="container d-flex align-items-center justify-content-between">
         <div>
-            <a href="{% url 'index' %}" class="h2 mb-0 text-custom-light-purple text-decoration-none">Find your Product</a>
+            <a href="{% url 'index' %}" class="h2 text-decoration-none mb-0 text-custom-blue" style="font-family:BBH Hegarty">FIND YOUR PRODUCT</a>
         </div>
         
         <div class="d-flex align-items-center gap-3">
             {% if request.user.is_authenticated %}
-                <span class="h4 text-custom-light-purple">Hi, <a href="{% url 'profile' %}" class="text-decoration-none mb-0 text-custom-light-purple"> {{user.username}}</a></span>
+                <span class="h4 text-custom-blue" style="font-family: Cascadia Mono;">Hi, <a href="{% url 'profile' %}" class="text-decoration-none mb-0 text-custom-blue" style="font-family: Cascadia Mono;"> {{user.username}}</a></span>
                 <img src="data:image/svg+xml;utf8,"
                     alt="Profile Picture"
                     class="rounded-circle"
                     width="50"
                     height="50">
-                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-light">Logout</a>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-light" style="font-family: Cascadia Mono;">Logout</a>
 
             {% else %}
-                <span class="h4 btn btn-sm btn-outline-light textcustom-light-purple">Hi, <a href="{% url 'register' %}">non authenticated user</a></span>
+                <span class="h4 btn btn-sm btn-outline-light" style="font-family: Cascadia Mono;">Hi, <a href="{% url 'register' %}" style="font-family: Cascadia Mono;">non authenticated user</a></span>
             {% endif %}
         </div>
     </div>

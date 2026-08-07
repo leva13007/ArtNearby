@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-3">
+<div class="p-4 container bg-custom-dark-blue position-relative">
 
-    <h2>{{ product.name }}</h2>
-    <p>{{ product.discreption }}</p>
-    <p>{{ products.price }}</p>
+    <h2 class="text-custom-blue">{{ product.name }}</h2>
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 50%; height: 50%;">
+    {% endif %}
+    <p class="text-custom-light-purple">{{ product.description }}</p>
+    <p class="text-custom-light-purple">{{ product.price }} €</p>
     
 
 </div>

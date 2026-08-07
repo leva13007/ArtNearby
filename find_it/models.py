@@ -37,8 +37,14 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     price = models.FloatField()
+    description = models.TextField()
     fabricator = models.ManyToManyField(Fabticator)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(
+        upload_to='product_images/',  # Images will save in MEDIA_ROOT/product_images/
+        blank=True,               
+        null=True                   
+    )
 
     def get_absolute_url(self):
         return reverse('find_it:list-product', kwargs={'pk': self.pk})

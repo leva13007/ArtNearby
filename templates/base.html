@@ -5,26 +5,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Where exactly is it{% endblock %}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/custom_bootstrap.css' %}">
-    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.2/maptiler-sdk.umd.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.2/maptiler-sdk.css" rel="stylesheet"/>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono&display=swap" rel="stylesheet">
+
+
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background: url("{% static 'images/abstract-bg.svg' %}") no-repeat center center fixed;
+            background: url("{% static 'images/gruzy-bg.png' %}") no-repeat center center fixed;
             background-size: cover;
+                    }
+    </style>
+    <style>
+        /* === Flashlight Mode === */
+        /* Candle container */
+        .candle-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        /* Bigger candle + NO yellow glow */
+        .candle-svg {
+            width: 80px;
+            height: 120px;
+            filter: none;     /* No glow! */
+            transition: all 0.1s ease;
+        }
+
+        /* Flashlight mode */
+        .flashlight-mode {
+            cursor: none !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Spotlight mask */
+        .flashlight-mode::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+            circle 250px at var(--spotlight-x, 0px) var(--spotlight-y, 0px),
+            transparent 0%,
+            rgba(0, 0, 0, 0.95) 60%,
+            rgba(0, 0, 0, 1) 100%
+            );
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Candle in flashlight mode */
+        .flashlight-mode .candle-container {
+            position: absolute;
+            pointer-events: none;
+            z-index: 9999;
         }
     </style>
-
 </head>
+
+
 <body class="bg-custom-purple">
     {% include "header.html" %}
     {% block content %}
 
     {% endblock %}
+
+    <div class="spotlight" id="spotlight"></div>
+
+    <!-- Candle element -->
+    <div class="candle-container" id="candle">
+        <!-- Replace SVG with your image -->
+        <img src="{% static 'images/candle.png' %}" class="candle-svg" alt="Candle">
+    </div>
+
+
+    <script>
+        // === Activate flashlight mode on candle click ===
+        document.getElementById('candle').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.body.classList.add('flashlight-mode');
+            document.body.style.cursor = 'none';
+        });
+
+        // === Move candle + spotlight with mouse ===
+        document.addEventListener('mousemove', function(e) {
+            if (document.body.classList.contains('flashlight-mode')) {
+            const candle = document.getElementById('candle');
+            candle.style.left = e.clientX + 'px';
+            candle.style.top = e.clientY + 'px';
+            document.body.style.setProperty('--spotlight-x', e.clientX + 'px');
+            document.body.style.setProperty('--spotlight-y', e.clientY + 'px');
+            }
+        });
+
+        // === REALISTIC FLAME ANIMATION ===
+        let flameIntensity = 0;
+        let flameDirection = 1;
+        setInterval(function() {
+            const flame = document.querySelector('.flame');
+            if (flame) {
+            // Random flicker intensity
+            flameIntensity += 0.05 * flameDirection;
+            if (flameIntensity > 1) flameDirection = -1;
+            if (flameIntensity < 0.3) flameDirection = 1;
+
+            // Random color (yellow/orange/red)
+            const red = Math.floor(255 * (0.8 + flameIntensity * 0.2));
+            const green = Math.floor(150 * (0.7 + flameIntensity * 0.3));
+            const blue = Math.floor(50 * flameIntensity);
+            flame.style.fill = `rgb(${red}, ${green}, ${blue})`;
+
+            // Random flame shape
+            const randomX = (Math.random() - 0.5) * 4;
+            const randomY = (Math.random() - 0.5) * 4;
+            flame.setAttribute('d',
+                `M${45 + randomX},${10 + randomY}
+                Q50,${0 + randomY - 2}
+                55,${10 + randomY}
+                Q50,${5 + randomY}
+                ${45 + randomX},${10 + randomY}`
+            );
+            }
+        }, 60); // Faster flicker for realism
+    </script>
+
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.2/maptiler-sdk.umd.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>

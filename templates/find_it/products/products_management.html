@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated and user.profile.user_type == 'company' %}
+        <div class="container mt-5">
+            <h2 class="mb-4">Manage My Products</h2>
+
+            <!-- Form to add a new store -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Add New Product</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.image.id_for_label }}" class="form-image">Image</label>
+                                {{ form.image }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">Сategory</label>
+                                {{ form.category }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.fabricator.id_for_label }}" class="form-label">Fabricator</label>
+                                {{ form.fabricator }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.store.id_for_label }}" class="form-label">Store</label>
+                                {{ form.store }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.price.id_for_label }}" class="form-label">Price</label>
+                                {{ form.price }}
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- List of existing products -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>My Products</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Images</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Fabricator</th>
+                                <th>Store</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 50px; max-height: 50px;">
+                                    {% endif %}
+                                </td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.fabricator }}</td>
+                                <td>{{ product.store }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>
+                                    <!-- Edit button (opens a modal or redirects to edit page) -->
+                                    <button class="btn btn-sm btn-warning edit-btn"
+                                            data-product-id="{{ product.id }}"
+                                            data-product-image="{{ product.image }}"
+                                            data-product-name="{{ product.name }}"
+                                            data-product-category="{{ product.category }}"
+                                            data-product-fabricator="{{ product.fabricator }}"
+                                            data-product-store="{{ product.store }}"
+                                            data-product-price="{{ product.price }}"
+                                            data-product-description="{{ product.description }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editProductsModal">
+                                        Edit
+                                    </button>
+                                    <!-- Delete button -->
+                                    <form method="post" action="{% url 'find_it:product-delete' product.pk %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for editing a products -->
+        <div class="modal fade" id="editProductsModal" tabindex="-1" aria-labelledby="editProductsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProductsModalLabel">Edit Products</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" id="editProductsForm">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input type="hidden" name="product_id" id="editProductsId">
+                            <div class="mb-3">
+                                <label for="editImage" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="editImage" name="image" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategory" class="form-label">Category</label>
+                                <textarea class="form-control" id="editCategory" name="category" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editFabricator" class="form-label">Fabricator</label>
+                                <input type="fabricator" class="form-control" id="editFabricator" name="fabricator" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStore" class="form-label">Store</label>
+                                <input type="form-store" class="form-control" id="editStore" name="store" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrice" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="editPrice" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="editDescription" name="description" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript to handle edit modal -->
+        <script>
+            // Populate the edit modal with products data
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productsId = this.getAttribute('data-product-id');
+                    const productsImage = this.getAttribute('data-product-image');
+                    const productsName = this.getAttribute('data-product-name');
+                    const productsCategory = this.getAttribute('data-product-category');
+                    const productsFabricator = this.getAttribute('data-product-fabricator');
+                    const productsStore = this.getAttribute('data-product-store');
+                    const productsPrice = this.getAttribute('data-product-price');
+                    const productsDescription = this.getAttribute('data-product-description');
+
+                    document.getElementById('editProductsId').value = productsId;
+                    document.getElementById('editImage').value = '';
+                    document.getElementById('editName').value = productsName;
+                    document.getElementById('editCategory').value = productsCategory;
+                    document.getElementById('editFabricator').value = productsFabricator;
+                    document.getElementById('editStore').value = productsStore;
+                    document.getElementById('editPrice').value = productsPrice;
+                    document.getElementById('editDescription').value = productsDescription;
+
+                    // Update form action (adjust URL name if needed)
+                    document.getElementById('editProductsForm').action = `/products/${productsId}/update/`
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}

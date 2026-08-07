@@ -1,0 +1,115 @@
+/* Card container - 3 columns for the gap */
+.cards-container {
+    display: grid;
+    grid-template-columns: 40% 20% 40%;
+    grid-template-rows: 40% 50% 10%;
+    gap: 50px;
+    height: 600px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Card wrapper */
+.card-wrapper {
+    position: relative;
+}
+
+/* Card styling (DARK BACKGROUND ONLY HERE) */
+.card {
+    background: #141414;
+    border-radius: 10px;
+    overflow: hidden;
+    color: white;
+    width: 100%;
+    height: 100%;
+}
+
+/* Position the 3 card wrappers */
+.card-wrapper:nth-child(1) { grid-column: 1; grid-row: 1 / span 2;} /* Tall card (left) */
+.card-wrapper:nth-child(2) { grid-column: 3; grid-row: 1; } /* Top-right card */
+.card-wrapper:nth-child(3) { grid-column: 3; grid-row: 2; } /* Bottom-right card */
+
+/* Card image */
+.card-image {
+    height: 100%;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Card content */
+.card-content {
+    padding: 10px;
+}
+
+/* Text styling */
+.card-description {
+    margin: 0;
+    font-size: 0.9em;
+    color: #e0e0e0;
+}
+
+.card-name {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: white;
+}
+
+/* ===== ROTATED NAMES FOR CARDS 2 & 3 ===== */
+.card-wrapper:nth-child(2) .card-name {
+    position: absolute;
+    top: 50%;
+    right: -40px;
+    transform: rotate(90deg) translateY(-50%);
+    transform-origin: right center;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.card-wrapper:nth-child(3) .card-name {
+    position: absolute;
+    top: 50%;
+    left: -40px;
+    transform: rotate(-90deg) translateY(-50%);
+    transform-origin: left center;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* ===== LABEL POSITIONING (OUTSIDE CARDS) ===== */
+.object-label {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+/* Card 1: Label at BOTTOM-LEFT */
+.card-wrapper:nth-child(1) .object-label {
+    bottom: -40px;
+    left: 10px;
+    transform: none;
+}
+
+/* Card 2: Label on RIGHT SIDE (vertical) */
+.card-wrapper:nth-child(2) .object-label {
+    top: 0;
+    right: -60px;
+    transform: rotate(-90deg);
+    transform-origin: right center;
+}
+
+/* Card 3: Label on LEFT SIDE (vertical) */
+.card-wrapper:nth-child(3) .object-label {
+    top: 0;
+    left: -60px;
+    transform: rotate(90deg);
+    transform-origin: left center;
+}

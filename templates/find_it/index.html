@@ -1,24 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="p-4 container">
-        <div class="mt-4">
-            <h4 class="text-custom-light-purple">Some products that might be interesting</h2>
-            <ul>
-            {% for product in products %}
-                <li class="list-group-item d-flex justify-content-between row row-cols-2 row-cols-lg-5 g-2 g-lg-3 p-3">
-                    <div class="card opacity-50">
-                        <div class="card-body opacity-100">
-                            <a href="{% url 'find_it:product-detail' product.pk %}" class="text-decoration-none mb-0 text-custom-custom-dark-blue">{{ product.name }}</a>
-                            <span class="badge badge-primary text-custom-dark-blue">{{ product.category }}</span>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <span class="h4 text-custom-light-purple">Want to see more?<a href="{% url 'find_it:list-product' %}" class="text-decoration-none text-custom-dark-blue"> Click here!</a></span>
+<div class="p-5">
+    <!-- Main container -->
+    <div class="p-4 container bg-custom-dark-blue position-relative">
+
+        <!-- Circle -->
+        <div class="position-absolute top-50 start-50 translate-middle" style="z-index: 0; width: 100%; height: 100%;">
+            <img src="static/images/Circle.png" style="width: 70%; height: 70%;" alt="Background Circle">
         </div>
 
+        <div class="position-relative" style="z-index: 1;">
+
+            <!-- Title -->
+            <h4 class="text-custom-light-purple">Some products that might be interesting</h4>
+
+            <!-- Cards Grid -->
+            <div class="cards-container d-grid gap-3" style="grid-template-columns: 1fr 1fr;">
+                {% for product in showcase_products %}
+                <div class="card-wrapper position-relative">
+                    <!-- OBJECT #X label (OUTSIDE the card) -->
+                    <div class="object-label position-absolute">
+                        <img src="static/images/Dot.png" style="width: 20px; height: 20px;">
+                        <h4 class="d-inline-block text-custom-light-purple ms-2 mb-0 text-uppercase" style="font-family: Cascadia Mono;">{{ product.name }}</h4>
+                    </div>
+
+                    <!-- The card (DARK BACKGROUND ONLY HERE) -->
+                    <div class="card">
+                        <div class="card-image">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="card-content">
+                            <p class="card-description">{{ product.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-3">
+                <span class="h4 text-custom-light-purple">
+                    Want to see more?
+                    <a href="{% url 'find_it:list-product' %}" class="text-decoration-none text-custom-blue">Click here!</a>
+                </span>
+            </div>
+
+        </div>
     </div>
+</div>
 {% endblock %}
