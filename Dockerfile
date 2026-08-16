@@ -208,4 +208,4 @@ EXPOSE 8000
 # на:
 #
 #     назва_проєкту.wsgi
-ENTRYPOINT ["gunicorn", "manga.wsgi", "-b", "0.0.0.0:8000"]
+ENTRYPOINT ["gunicorn", "django_where.wsgi", "-b", "0.0.0.0:8000"]
