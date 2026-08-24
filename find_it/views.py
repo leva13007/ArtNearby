@@ -86,7 +86,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 class ProductDeleteView(LoginRequiredMixin, UserIsOverMixin, DeleteView):
     model = models.Product
     template_name = "find_it/products/product_delete_confirmation.html"
-    success_url = reverse_lazy("find_it:product-management")
+    success_url = reverse_lazy("find_it:products-management")
 
 @method_decorator(company_required, name='dispatch')
 class StoreManagementView(LoginRequiredMixin, View):

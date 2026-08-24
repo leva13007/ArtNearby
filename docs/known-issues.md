@@ -39,3 +39,4 @@
 
 - ~~`requirements.txt` без Pillow~~ — `ImageField` вимагає Pillow, тепер вказано в `requirements.txt`.
 - ~~Dockerfile: неправильний `ENTRYPOINT`~~ — було `manga.wsgi`, виправлено на `django_where.wsgi`.
+- ~~`ProductDeleteView.success_url` посилався на неіснуючий роут `find_it:product-management`~~ (`find_it/views.py`) — правильна назва `find_it:products-management` (множина); падало з `NoReverseMatch` при успішному видаленні товару, виправлено. Знайдено при складанні [`routes.md`](./routes.md).
